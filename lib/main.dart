@@ -47,78 +47,83 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(widget.title),
               backgroundColor: setMainColor(),
             ),
-            body: Center(
+            body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                  customText(
-                      "Remplissez tous les champs pour obtenir votre besoin journalier en calories"),
-                  Card(
-                      elevation: 10.0,
-                      child: Column(
-                        children: [
-                          addPadding(),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                customText("Femme", color: Colors.pink),
-                                Switch(
-                                    value: gender,
-                                    inactiveTrackColor: Colors.pink,
-                                    activeColor: Colors.blue,
-                                    onChanged: (bool b) {
-                                      setState(() {
-                                        gender = b;
-                                      });
-                                    }),
-                                customText("Homme", color: Colors.blue)
-                              ]),
-                          addPadding(),
-                          ElevatedButton(
-                              onPressed: () {
-                                displayDatePicker();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: setMainColor(),
-                                  foregroundColor: Colors.white),
-                              child: customText(
-                                  (age == 0)
-                                      ? "Appuyer pour entrer votre age"
-                                      : "Votre age est de ${age.toInt()} ans",
-                                  color: Colors.white)),
-                          addPadding(),
-                          customText("Votre taille est de ${size.toInt()} cm",
-                              color: setMainColor()),
-                          addPadding(),
-                          Slider(
-                              value: size,
-                              min: 80.0,
-                              max: 215.0,
-                              activeColor: setMainColor(),
-                              label: size.toString(),
-                              onChanged: (double d) {
-                                setState(() {
-                                  size = d;
-                                });
-                              }),
-                          addPadding(),
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            onChanged: (String text) {
-                              setState(() {
-                                weight = double.parse(text);
-                              });
-                            },
-                            decoration: const InputDecoration(
-                                labelText: "Entrez votre poids en Kg"),
-                          ),
-                          addPadding(),
-                          customText("Fréquence d'activité sportive"),
-                          addPadding(),
-                          rowActivities()
-                        ],
-                      ))
-                ]))));
+                      addPadding(),
+                      customText(
+                          "Remplissez tous les champs pour obtenir votre besoin journalier en calories"),
+                      addPadding(),
+                      Card(
+                          elevation: 10.0,
+                          child: Column(
+                            children: [
+                              addPadding(),
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    customText("Femme", color: Colors.pink),
+                                    Switch(
+                                        value: gender,
+                                        inactiveTrackColor: Colors.pink,
+                                        activeColor: Colors.blue,
+                                        onChanged: (bool b) {
+                                          setState(() {
+                                            gender = b;
+                                          });
+                                        }),
+                                    customText("Homme", color: Colors.blue)
+                                  ]),
+                              addPadding(),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    displayDatePicker();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: setMainColor(),
+                                      foregroundColor: Colors.white),
+                                  child: customText(
+                                      (age == 0)
+                                          ? "Appuyer pour entrer votre age"
+                                          : "Votre age est de ${age.toInt()} ans",
+                                      color: Colors.white)),
+                              addPadding(),
+                              customText(
+                                  "Votre taille est de ${size.toInt()} cm",
+                                  color: setMainColor()),
+                              addPadding(),
+                              Slider(
+                                  value: size,
+                                  min: 80.0,
+                                  max: 215.0,
+                                  activeColor: setMainColor(),
+                                  label: size.toString(),
+                                  onChanged: (double d) {
+                                    setState(() {
+                                      size = d;
+                                    });
+                                  }),
+                              addPadding(),
+                              TextField(
+                                keyboardType: TextInputType.number,
+                                onChanged: (String text) {
+                                  setState(() {
+                                    weight = double.parse(text);
+                                  });
+                                },
+                                decoration: const InputDecoration(
+                                    labelText: "Entrez votre poids en Kg"),
+                              ),
+                              addPadding(),
+                              customText("Fréquence d'activité sportive"),
+                              addPadding(),
+                              rowActivities()
+                            ],
+                          ))
+                    ]))));
   }
 
   Future<void> displayDatePicker() async {
