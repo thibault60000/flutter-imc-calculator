@@ -32,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late double weight;
   late double age = 0;
+  double size = 170.0;
   bool gender = false;
 
   @override
@@ -53,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       elevation: 10.0,
                       child: Column(
                         children: [
+                          padding(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -68,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }),
                                 customText("Homme", color: Colors.blue)
                               ]),
+                          padding(),
                           ElevatedButton(
                               onPressed: () {
                                 displayDatePicker();
@@ -80,6 +83,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ? "Appuyer pour entrer votre age"
                                       : "Votre age est de ${age.toInt()} ans",
                                   color: Colors.white)),
+                          padding(),
+                          customText("Votre taille est de ${size.toInt()} cm",
+                              color: setMainColor()),
+                          padding(),
+                          Slider(
+                              value: size,
+                              min: 80.0,
+                              max: 215.0,
+                              activeColor: setMainColor(),
+                              label: size.toString(),
+                              onChanged: (double d) {
+                                setState(() {
+                                  size = d;
+                                });
+                              }),
+                          padding(),
                           TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (String text) {
@@ -89,7 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                             decoration: const InputDecoration(
                                 labelText: "Entrez votre poids en Kg"),
-                          )
+                          ),
+                          padding(),
                         ],
                       ))
                 ]))));
@@ -110,6 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
         age = years;
       });
     }
+  }
+
+  Padding padding() {
+    return const Padding(padding: EdgeInsets.only(top: 20.0));
   }
 
   Color setMainColor() {
