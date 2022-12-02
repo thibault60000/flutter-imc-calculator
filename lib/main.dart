@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +31,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late double weight;
+  late double age = 0;
+  bool gender = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Scaffold(
             appBar: AppBar(
               title: Text(widget.title),
+              backgroundColor: setMainColor(),
             ),
             body: Center(
                 child: Column(
@@ -49,6 +53,33 @@ class _MyHomePageState extends State<MyHomePage> {
                       elevation: 10.0,
                       child: Column(
                         children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                customText("Femme", color: Colors.pink),
+                                Switch(
+                                    value: gender,
+                                    inactiveTrackColor: Colors.pink,
+                                    activeColor: Colors.blue,
+                                    onChanged: (bool b) {
+                                      setState(() {
+                                        gender = b;
+                                      });
+                                    }),
+                                customText("Homme", color: Colors.blue)
+                              ]),
+                          ElevatedButton(
+                              onPressed: () {
+                                displayDatePicker();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: setMainColor(),
+                                  foregroundColor: Colors.white),
+                              child: customText(
+                                  (age == 0)
+                                      ? "Appuyer pour entrer votre age"
+                                      : "Votre age est de ${age.toInt()} ans",
+                                  color: Colors.white)),
                           TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (String text) {
@@ -62,6 +93,30 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       ))
                 ]))));
+  }
+
+  Future<void> displayDatePicker() async {
+    DateTime? choice = await showDatePicker(
+        context: context,
+        initialDatePickerMode: DatePickerMode.year,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now());
+
+    if (choice != null) {
+      var diffInDays = DateTime.now().difference(choice).inDays;
+      var years = (diffInDays / 365);
+      setState(() {
+        age = years;
+      });
+    }
+  }
+
+  Color setMainColor() {
+    if (gender) {
+      return Colors.blue;
+    }
+    return Colors.pink;
   }
 
   Text customText(String text, {color = Colors.black, fontSize = 15.0}) {
