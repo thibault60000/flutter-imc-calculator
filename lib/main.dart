@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:developer' as developer;
 
 void main() {
   runApp(const MyApp());
@@ -30,13 +31,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late double weight;
-  int radioSelected = 1;
-  late double age = 0;
+  double? weight;
+  int? radioSelected;
+  double age = 18;
   double size = 170.0;
   bool gender = false;
 
-  Map mapAcitivities = {"Faible": 0, "Modéré": 1, "Intense": 2};
+  int? calories;
+  int? caloriesWithActivity;
+
+  Map mapAcitivities = {0: "Faible", 1: "Modéré", 2: "Intense"};
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               addPadding(),
                               rowActivities()
                             ],
-                          ))
+                          )),
+                      addPadding(),
+                      ElevatedButton(
+                          onPressed: calculate,
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: setMainColor(),
+                              foregroundColor: Colors.white),
+                          child: customText('Calculer', color: Colors.white)),
                     ]))));
   }
 
@@ -164,10 +175,10 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> list = [];
 
     mapAcitivities.forEach(((key, value) => list.add(
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          customText(key),
+            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          customText(value),
           Radio(
-              value: value,
+              value: key,
               groupValue: radioSelected,
               onChanged: (i) {
                 setState(() {
@@ -178,5 +189,88 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: list);
+  }
+
+  void calculate() {
+    developer.log('Calculate');
+
+    if (weight != null && radioSelected != null) {
+      developer.log('OK');
+      if (gender) {
+        calories =
+            (66.47 + (13.75 * weight!) + (5.0 * size) - (6.75 * age)).toInt();
+      } else {
+        calories =
+            (655.095 + (9.5634 * weight!) + (1.8496 * size) - (4.6756 * age))
+                .toInt();
+      }
+
+      switch (radioSelected) {
+        case 0:
+          caloriesWithActivity = (calories! * 1.2).toInt();
+          break;
+        case 1:
+          caloriesWithActivity = (calories! * 1.55).toInt();
+          break;
+        case 2:
+          caloriesWithActivity = (calories! * 1.9).toInt();
+          break;
+        default:
+          caloriesWithActivity = calories;
+          break;
+      }
+
+      setState(() {
+        alertConfirm();
+      });
+    } else {
+      developer.log('PAS OK');
+      alertError();
+    }
+  }
+
+  Future<void> alertConfirm() async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (builder) {
+          return SimpleDialog(
+            title:
+                customText("Votre besoin en calories", color: setMainColor()),
+            contentPadding: const EdgeInsets.all(10.0),
+            children: [
+              addPadding(),
+              customText("Votre besoin de base est de ${calories} calories"),
+              addPadding(),
+              customText(
+                  "Votre besoin avec activité sportive est de ${caloriesWithActivity} calories"),
+              addPadding(),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(builder);
+                  },
+                  child: customText("OK", color: Colors.white))
+            ],
+          );
+        });
+  }
+
+  Future<void> alertError() async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (builder) {
+          return AlertDialog(
+            title: customText('Erreur'),
+            content: customText("Tous les champs doivent être remplis"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(builder);
+                  },
+                  child: customText("OK", color: Colors.red))
+            ],
+          );
+        });
   }
 }
