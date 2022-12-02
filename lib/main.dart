@@ -31,9 +31,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late double weight;
+  int radioSelected = 1;
   late double age = 0;
   double size = 170.0;
   bool gender = false;
+
+  Map mapAcitivities = {"Faible": 0, "Modéré": 1, "Intense": 2};
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       elevation: 10.0,
                       child: Column(
                         children: [
-                          padding(),
+                          addPadding(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -70,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }),
                                 customText("Homme", color: Colors.blue)
                               ]),
-                          padding(),
+                          addPadding(),
                           ElevatedButton(
                               onPressed: () {
                                 displayDatePicker();
@@ -83,10 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ? "Appuyer pour entrer votre age"
                                       : "Votre age est de ${age.toInt()} ans",
                                   color: Colors.white)),
-                          padding(),
+                          addPadding(),
                           customText("Votre taille est de ${size.toInt()} cm",
                               color: setMainColor()),
-                          padding(),
+                          addPadding(),
                           Slider(
                               value: size,
                               min: 80.0,
@@ -98,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   size = d;
                                 });
                               }),
-                          padding(),
+                          addPadding(),
                           TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (String text) {
@@ -109,7 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             decoration: const InputDecoration(
                                 labelText: "Entrez votre poids en Kg"),
                           ),
-                          padding(),
+                          addPadding(),
+                          customText("Fréquence d'activité sportive"),
+                          addPadding(),
+                          rowActivities()
                         ],
                       ))
                 ]))));
@@ -132,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Padding padding() {
+  Padding addPadding() {
     return const Padding(padding: EdgeInsets.only(top: 20.0));
   }
 
@@ -147,5 +153,25 @@ class _MyHomePageState extends State<MyHomePage> {
     return Text(text,
         textAlign: TextAlign.center,
         style: TextStyle(color: color, fontSize: fontSize));
+  }
+
+  Row rowActivities() {
+    List<Widget> list = [];
+
+    mapAcitivities.forEach(((key, value) => list.add(
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          customText(key),
+          Radio(
+              value: value,
+              groupValue: radioSelected,
+              onChanged: (i) {
+                setState(() {
+                  radioSelected = i!;
+                });
+              })
+        ]))));
+
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: list);
   }
 }
